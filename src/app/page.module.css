@@ -92,7 +92,8 @@
     }
 
     .sectionHeader,
-    .grid {
+    .grid,
+    .footer {
         padding: 0 1rem;
     }
 }
