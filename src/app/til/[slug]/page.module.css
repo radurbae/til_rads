@@ -163,6 +163,7 @@
 
     .articleHeader {
         margin-bottom: var(--space-lg);
+        padding: 0 1rem;
     }
 
     .title {
