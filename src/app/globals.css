@@ -59,12 +59,13 @@ a {
 }
 
 /* Utility Classes */
+/* Utility Classes */
 .container {
     width: 100%;
     max-width: 720px;
     margin: 0 auto;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 @media (min-width: 768px) {
