@@ -90,4 +90,9 @@
     .heroSubtitle {
         font-size: 0.875rem;
     }
+
+    .sectionHeader,
+    .grid {
+        padding: 0 1rem;
+    }
 }
