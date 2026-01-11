@@ -149,3 +149,39 @@
 .notFoundText {
     color: var(--text-muted);
 }
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+    .article {
+        padding: var(--space-lg) 0;
+    }
+
+    .articleHeader {
+        margin-bottom: var(--space-lg);
+    }
+
+    .title {
+        font-size: 1.25rem;
+    }
+
+    .content {
+        font-size: 0.875rem;
+    }
+
+    .content h2 {
+        font-size: 1rem;
+    }
+
+    .content h3 {
+        font-size: 0.9375rem;
+    }
+
+    .content pre {
+        padding: var(--space-sm);
+        font-size: 0.75rem;
+    }
+
+    .content pre code {
+        font-size: 0.75rem;
+    }
+}

@@ -63,5 +63,11 @@ a {
     width: 100%;
     max-width: 720px;
     margin: 0 auto;
-    padding: 0 var(--space-lg);
+    padding: 0 var(--space-md);
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding: 0 var(--space-lg);
+    }
 }
