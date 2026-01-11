@@ -38,6 +38,7 @@
 
 .content p {
     margin-bottom: var(--space-md);
+    text-align: justify;
 }
 
 .content a {
