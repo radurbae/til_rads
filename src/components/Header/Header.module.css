@@ -1,0 +1,31 @@
+.header {
+    padding: var(--space-xl) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.nav {
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.navLink {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    transition: color var(--transition-fast);
+}
+
+.navLink:hover {
+    color: var(--text-primary);
+}
