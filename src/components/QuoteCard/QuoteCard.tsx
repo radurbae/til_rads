@@ -21,9 +21,9 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Canvas size (optimized for social sharing)
-        const width = 1200;
-        const height = 630;
+        // Canvas size (9:16 portrait for Stories/Reels)
+        const width = 1080;
+        const height = 1920;
         canvas.width = width;
         canvas.height = height;
 
@@ -43,20 +43,20 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
         }
 
         // Quote marks decoration
-        ctx.font = 'bold 200px Georgia';
+        ctx.font = 'bold 300px Georgia';
         ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-        ctx.fillText('"', 40, 180);
-        ctx.fillText('"', width - 160, height - 60);
+        ctx.fillText('"', 60, 350);
+        ctx.fillText('"', width - 220, height - 200);
 
         // Draw quote text
         ctx.fillStyle = '#ffffff';
-        ctx.font = '600 36px system-ui, -apple-system, sans-serif';
+        ctx.font = '600 48px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
         // Word wrap the quote
-        const maxWidth = width - 200;
-        const lineHeight = 52;
+        const maxWidth = width - 160;
+        const lineHeight = 72;
         const words = quote.split(' ');
         const lines: string[] = [];
         let currentLine = '';
@@ -75,7 +75,7 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
 
         // Calculate starting Y position to center text
         const totalTextHeight = lines.length * lineHeight;
-        let startY = (height - totalTextHeight) / 2 - 20;
+        let startY = (height - totalTextHeight) / 2;
 
         // Draw each line
         lines.forEach((line, index) => {
@@ -93,13 +93,13 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
                     ctx.fillRect(i, j, 1, 1);
                 }
             }
-            ctx.font = 'bold 200px Georgia';
+            ctx.font = 'bold 300px Georgia';
             ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.fillText('"', 40, 180);
-            ctx.fillText('"', width - 160, height - 60);
+            ctx.fillText('"', 60, 350);
+            ctx.fillText('"', width - 220, height - 200);
 
             ctx.fillStyle = '#ffffff';
-            ctx.font = '600 36px system-ui, -apple-system, sans-serif';
+            ctx.font = '600 48px system-ui, -apple-system, sans-serif';
             ctx.textAlign = 'center';
             lines.forEach((line, index) => {
                 ctx.fillText(line, width / 2, startY + (index + 0.5) * lineHeight);
@@ -107,23 +107,23 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
         }
 
         // Source/attribution
-        ctx.font = '400 24px system-ui, -apple-system, sans-serif';
+        ctx.font = '400 32px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        const sourceY = startY + totalTextHeight + 50;
+        const sourceY = startY + totalTextHeight + 80;
         ctx.fillText(`— ${source}`, width / 2, sourceY);
 
         // Branding
-        ctx.font = '500 20px system-ui, -apple-system, sans-serif';
+        ctx.font = '500 28px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.textAlign = 'right';
-        ctx.fillText('TIL by Rads', width - 60, height - 40);
+        ctx.textAlign = 'center';
+        ctx.fillText('TIL by Rads', width / 2, height - 100);
 
         // Decorative line
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(100, height - 80);
-        ctx.lineTo(width - 100, height - 80);
+        ctx.moveTo(200, height - 150);
+        ctx.lineTo(width - 200, height - 150);
         ctx.stroke();
 
         // Generate image URL
