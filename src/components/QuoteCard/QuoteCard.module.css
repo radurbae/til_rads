@@ -107,6 +107,24 @@
     background: var(--border);
 }
 
+.shuffleButton {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.shuffleButton:hover {
+    opacity: 0.9;
+}
+
 /* Selection Button */
 .selectionButton {
     position: fixed;
