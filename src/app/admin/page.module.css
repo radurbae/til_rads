@@ -80,13 +80,13 @@
     color: var(--text-primary);
 }
 
-/* Writing Form Styles */
-.page {
+/* Dashboard Styles */
+.dashboard {
     padding: var(--space-2xl) 0;
-    max-width: 700px;
+    max-width: 900px;
 }
 
-.header {
+.dashboardHeader {
     margin-bottom: var(--space-xl);
 }
 
@@ -102,13 +102,82 @@
     color: var(--text-primary);
 }
 
-.title {
+.dashboardTitle {
     font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: -0.02em;
 }
 
-/* Form */
+/* Tabs */
+.tabsContainer {
+    display: flex;
+    gap: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--space-lg);
+}
+
+.tab {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.tab:hover {
+    color: var(--text-primary);
+}
+
+.tabActive {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-primary);
+}
+
+/* Sub Tabs */
+.subTabsContainer {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.subTab {
+    padding: var(--space-xs) var(--space-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.subTab:hover {
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+.subTabActive {
+    background: var(--text-primary);
+    color: var(--background);
+    border-color: var(--text-primary);
+}
+
+.subTabActive:hover {
+    background: var(--text-primary);
+    color: var(--background);
+}
+
+/* Tab Content */
+.tabContent {
+    min-height: 400px;
+}
+
+/* Form Styles */
 .form {
     display: flex;
     flex-direction: column;
@@ -190,6 +259,19 @@
     cursor: not-allowed;
 }
 
+/* Edit Header */
+.editHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.editHeader h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
 /* Messages */
 .message {
     padding: var(--space-md);
@@ -198,6 +280,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     line-height: 1.5;
+    margin-bottom: var(--space-lg);
 }
 
 .info {
@@ -214,44 +297,295 @@
     margin: 0;
 }
 
-.content {
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-}
-
-.content code {
-    font-family: 'SF Mono', Monaco, monospace;
+.infoBox {
+    padding: var(--space-md);
     font-size: 0.875rem;
     background: var(--surface);
-    padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-lg);
 }
 
+/* Loading & Empty States */
+.loading,
+.emptyState {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--text-muted);
+}
+
+/* Table Styles */
+.articleList {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.table th,
+.table td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.table th {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.titleCell {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dateCell {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.actionsCell {
+    white-space: nowrap;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+}
+
+/* Action Buttons */
+.editButton,
+.deleteButton,
+.cancelButton {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background: transparent;
+}
+
+.editButton {
+    color: var(--text-primary);
+    margin-right: var(--space-xs);
+}
+
+.editButton:hover {
+    background: var(--surface);
+}
+
+.deleteButton {
+    color: #dc2626;
+    border-color: rgba(220, 38, 38, 0.3);
+}
+
+.deleteButton:hover {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+.cancelButton {
+    color: var(--text-muted);
+}
+
+.cancelButton:hover {
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+/* Card Grid for Categories */
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-md);
+}
+
+.card {
+    padding: var(--space-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.card:hover {
+    border-color: var(--text-muted);
+}
+
+.cardIcon {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-xs);
+}
+
+.cardName {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.cardCount {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Tag Cloud */
+.tagCloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.tagItem {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+}
+
+.tagCount {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    background: var(--background);
+    border-radius: 9999px;
+    color: var(--text-muted);
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: var(--background);
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal h3 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-md);
+}
+
+.modal p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.modalTitle {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modalWarning {
+    font-size: 0.875rem;
+    color: #dc2626;
+    margin-top: var(--space-md);
+}
+
+.modalActions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-top: var(--space-lg);
+}
+
+.confirmDeleteButton {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.confirmDeleteButton:hover {
+    opacity: 0.8;
+}
+
+.confirmDeleteButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Mobile Responsive */
 @media (max-width: 640px) {
     .row {
         grid-template-columns: 1fr;
     }
 
-    .page {
-        padding: var(--space-lg) 0;
+    .dashboard {
+        padding: var(--space-lg) 1.5rem;
     }
 
-    .header {
-        padding: 0 1.5rem;
+    .dashboardHeader {
+        padding: 0;
     }
 
-    .form {
-        padding: 0 1.5rem;
-    }
-
-    .info {
-        margin-left: 1.5rem;
-        margin-right: 1.5rem;
-    }
-
-    .title {
+    .dashboardTitle {
         font-size: 1.25rem;
+    }
+
+    .tabsContainer {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tab {
+        white-space: nowrap;
+        padding: var(--space-sm) var(--space-sm);
+        font-size: 0.875rem;
+    }
+
+    .subTabsContainer {
+        flex-wrap: wrap;
+    }
+
+    .table {
+        font-size: 0.75rem;
+    }
+
+    .table th,
+    .table td {
+        padding: var(--space-xs) var(--space-sm);
+    }
+
+    .titleCell {
+        max-width: 150px;
+    }
+
+    .cardGrid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .loginContainer {
@@ -260,5 +594,9 @@
 
     .loginTitle {
         font-size: 1.5rem;
+    }
+
+    .field textarea {
+        min-height: 300px;
     }
 }
