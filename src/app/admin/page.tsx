@@ -59,6 +59,14 @@ export default function AdminPage() {
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [isLoadingTags, setIsLoadingTags] = useState(false);
 
+    // Category/Tag management state
+    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+    const [editingTag, setEditingTag] = useState<Tag | null>(null);
+    const [deleteCategoryConfirm, setDeleteCategoryConfirm] = useState<Category | null>(null);
+    const [deleteTagConfirm, setDeleteTagConfirm] = useState<Tag | null>(null);
+    const [newCategoryName, setNewCategoryName] = useState("");
+    const [newTagName, setNewTagName] = useState("");
+
     // Fetch articles
     const fetchArticles = useCallback(async () => {
         setIsLoadingArticles(true);
@@ -279,6 +287,108 @@ export default function AdminPage() {
             }
         } catch {
             setMessage("❌ Failed to delete article");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Rename category handler
+    const handleRenameCategory = async () => {
+        if (!editingCategory || !newCategoryName.trim()) return;
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/admin/categories/${encodeURIComponent(editingCategory.name)}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newName: newCategoryName, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setMessage(`✅ ${data.message}`);
+                setEditingCategory(null);
+                setNewCategoryName("");
+                fetchCategories();
+            } else {
+                setMessage(`❌ Error: ${data.error}`);
+            }
+        } catch {
+            setMessage("❌ Failed to rename category");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Delete category handler
+    const handleDeleteCategory = async () => {
+        if (!deleteCategoryConfirm) return;
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/admin/categories/${encodeURIComponent(deleteCategoryConfirm.name)}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setMessage(`✅ ${data.message}`);
+                setDeleteCategoryConfirm(null);
+                fetchCategories();
+            } else {
+                setMessage(`❌ Error: ${data.error}`);
+            }
+        } catch {
+            setMessage("❌ Failed to delete category");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Rename tag handler
+    const handleRenameTag = async () => {
+        if (!editingTag || !newTagName.trim()) return;
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/admin/tags/${encodeURIComponent(editingTag.name)}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newName: newTagName, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setMessage(`✅ ${data.message}`);
+                setEditingTag(null);
+                setNewTagName("");
+                fetchTags();
+            } else {
+                setMessage(`❌ Error: ${data.error}`);
+            }
+        } catch {
+            setMessage("❌ Failed to rename tag");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Delete tag handler
+    const handleDeleteTag = async () => {
+        if (!deleteTagConfirm) return;
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/admin/tags/${encodeURIComponent(deleteTagConfirm.name)}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setMessage(`✅ ${data.message}`);
+                setDeleteTagConfirm(null);
+                fetchTags();
+            } else {
+                setMessage(`❌ Error: ${data.error}`);
+            }
+        } catch {
+            setMessage("❌ Failed to delete tag");
         } finally {
             setIsLoading(false);
         }
@@ -580,7 +690,7 @@ export default function AdminPage() {
                     {mainTab === "categories" && (
                         <div className={styles.tabContent}>
                             <div className={styles.infoBox}>
-                                ℹ️ Kategori dibuat otomatis dari artikel yang ditulis. Tidak bisa diedit secara terpisah.
+                                ℹ️ Klik tombol Edit atau Hapus untuk mengelola kategori di semua artikel.
                             </div>
                             {isLoadingCategories ? (
                                 <div className={styles.loading}>Memuat kategori...</div>
@@ -593,6 +703,20 @@ export default function AdminPage() {
                                             <div className={styles.cardIcon}>📁</div>
                                             <div className={styles.cardName}>{cat.name}</div>
                                             <div className={styles.cardCount}>{cat.count} artikel</div>
+                                            <div className={styles.cardActions}>
+                                                <button
+                                                    className={styles.editButton}
+                                                    onClick={() => { setEditingCategory(cat); setNewCategoryName(cat.name); }}
+                                                >
+                                                    ✏️
+                                                </button>
+                                                <button
+                                                    className={styles.deleteButton}
+                                                    onClick={() => setDeleteCategoryConfirm(cat)}
+                                                >
+                                                    🗑️
+                                                </button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -604,7 +728,7 @@ export default function AdminPage() {
                     {mainTab === "tags" && (
                         <div className={styles.tabContent}>
                             <div className={styles.infoBox}>
-                                ℹ️ Tags dibuat otomatis dari artikel yang ditulis. Tidak bisa diedit secara terpisah.
+                                ℹ️ Klik tombol Edit atau Hapus pada tag untuk mengelolanya di semua artikel.
                             </div>
                             {isLoadingTags ? (
                                 <div className={styles.loading}>Memuat tags...</div>
@@ -613,9 +737,21 @@ export default function AdminPage() {
                             ) : (
                                 <div className={styles.tagCloud}>
                                     {tagsData.map((tag) => (
-                                        <span key={tag.name} className={styles.tagItem}>
-                                            {tag.name}
+                                        <span key={tag.name} className={styles.tagItemManage}>
+                                            <span className={styles.tagName}>{tag.name}</span>
                                             <span className={styles.tagCount}>{tag.count}</span>
+                                            <button
+                                                className={styles.tagEditBtn}
+                                                onClick={() => { setEditingTag(tag); setNewTagName(tag.name); }}
+                                            >
+                                                ✏️
+                                            </button>
+                                            <button
+                                                className={styles.tagDeleteBtn}
+                                                onClick={() => setDeleteTagConfirm(tag)}
+                                            >
+                                                ✕
+                                            </button>
                                         </span>
                                     ))}
                                 </div>
@@ -651,6 +787,126 @@ export default function AdminPage() {
                                 <button
                                     className={styles.confirmDeleteButton}
                                     onClick={handleDelete}
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? "Menghapus..." : "Ya, Hapus"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Edit Category Modal */}
+                {editingCategory && (
+                    <div className={styles.modalOverlay}>
+                        <div className={styles.modal}>
+                            <h3>✏️ Edit Kategori</h3>
+                            <p>Ubah nama kategori &ldquo;{editingCategory.name}&rdquo;</p>
+                            <p className={styles.modalHint}>Akan diubah di {editingCategory.count} artikel</p>
+                            <input
+                                type="text"
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                className={styles.modalInput}
+                                placeholder="Nama kategori baru"
+                            />
+                            <div className={styles.modalActions}>
+                                <button
+                                    className={styles.cancelButton}
+                                    onClick={() => { setEditingCategory(null); setNewCategoryName(""); }}
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    className={styles.submit}
+                                    onClick={handleRenameCategory}
+                                    disabled={isLoading || !newCategoryName.trim()}
+                                >
+                                    {isLoading ? "Menyimpan..." : "Simpan"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Delete Category Confirmation Modal */}
+                {deleteCategoryConfirm && (
+                    <div className={styles.modalOverlay}>
+                        <div className={styles.modal}>
+                            <h3>⚠️ Hapus Kategori</h3>
+                            <p>Apakah Anda yakin ingin menghapus kategori:</p>
+                            <p className={styles.modalTitle}>&ldquo;{deleteCategoryConfirm.name}&rdquo;</p>
+                            <p className={styles.modalHint}>{deleteCategoryConfirm.count} artikel akan diubah ke kategori &ldquo;General&rdquo;</p>
+                            <div className={styles.modalActions}>
+                                <button
+                                    className={styles.cancelButton}
+                                    onClick={() => setDeleteCategoryConfirm(null)}
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    className={styles.confirmDeleteButton}
+                                    onClick={handleDeleteCategory}
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? "Menghapus..." : "Ya, Hapus"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Edit Tag Modal */}
+                {editingTag && (
+                    <div className={styles.modalOverlay}>
+                        <div className={styles.modal}>
+                            <h3>✏️ Edit Tag</h3>
+                            <p>Ubah nama tag &ldquo;{editingTag.name}&rdquo;</p>
+                            <p className={styles.modalHint}>Akan diubah di {editingTag.count} artikel</p>
+                            <input
+                                type="text"
+                                value={newTagName}
+                                onChange={(e) => setNewTagName(e.target.value)}
+                                className={styles.modalInput}
+                                placeholder="Nama tag baru"
+                            />
+                            <div className={styles.modalActions}>
+                                <button
+                                    className={styles.cancelButton}
+                                    onClick={() => { setEditingTag(null); setNewTagName(""); }}
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    className={styles.submit}
+                                    onClick={handleRenameTag}
+                                    disabled={isLoading || !newTagName.trim()}
+                                >
+                                    {isLoading ? "Menyimpan..." : "Simpan"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Delete Tag Confirmation Modal */}
+                {deleteTagConfirm && (
+                    <div className={styles.modalOverlay}>
+                        <div className={styles.modal}>
+                            <h3>⚠️ Hapus Tag</h3>
+                            <p>Apakah Anda yakin ingin menghapus tag:</p>
+                            <p className={styles.modalTitle}>&ldquo;{deleteTagConfirm.name}&rdquo;</p>
+                            <p className={styles.modalHint}>Tag akan dihapus dari {deleteTagConfirm.count} artikel</p>
+                            <div className={styles.modalActions}>
+                                <button
+                                    className={styles.cancelButton}
+                                    onClick={() => setDeleteTagConfirm(null)}
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    className={styles.confirmDeleteButton}
+                                    onClick={handleDeleteTag}
                                     disabled={isLoading}
                                 >
                                     {isLoading ? "Menghapus..." : "Ya, Hapus"}

@@ -438,6 +438,20 @@
 .cardCount {
     font-size: 0.75rem;
     color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.cardActions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+.cardActions .editButton,
+.cardActions .deleteButton {
+    padding: 4px 8px;
+    font-size: 0.7rem;
 }
 
 /* Tag Cloud */
@@ -458,12 +472,47 @@
     font-size: 0.875rem;
 }
 
+.tagItemManage {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+}
+
+.tagName {
+    margin-right: 2px;
+}
+
 .tagCount {
     font-size: 0.75rem;
     padding: 2px 6px;
     background: var(--background);
     border-radius: 9999px;
     color: var(--text-muted);
+}
+
+.tagEditBtn,
+.tagDeleteBtn {
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+}
+
+.tagEditBtn:hover,
+.tagDeleteBtn:hover {
+    opacity: 1;
+}
+
+.tagDeleteBtn {
+    color: #dc2626;
 }
 
 /* Modal */
@@ -508,6 +557,30 @@
     font-size: 0.875rem;
     color: #dc2626;
     margin-top: var(--space-md);
+}
+
+.modalHint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.modalInput {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9375rem;
+    font-family: inherit;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    margin: var(--space-md) 0;
+    text-align: center;
+}
+
+.modalInput:focus {
+    outline: none;
+    border-color: var(--text-primary);
 }
 
 .modalActions {
