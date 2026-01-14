@@ -1,5 +1,5 @@
 ---
-title: "Analisis Grammatikal Lirik Lagu "About You - 1975""
+title: "Analisis Grammatikal Lirik Lagu 'About You - 1975'"
 date: 2026-01-14
 category: Song
 tags:

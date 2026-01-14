@@ -53,9 +53,12 @@ export async function POST(request: NextRequest) {
             ).join(' ')
             : 'TIL';
 
+        // Sanitize title - escape double quotes to prevent YAML parsing errors
+        const sanitizedTitle = title.replace(/"/g, "'");
+
         // Create frontmatter
         const frontmatter = `---
-title: "${title}"
+title: "${sanitizedTitle}"
 date: ${date}
 category: ${normalizedCategory}
 tags:
