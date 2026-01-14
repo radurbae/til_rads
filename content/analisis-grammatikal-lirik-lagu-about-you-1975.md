@@ -8,8 +8,6 @@ tags:
   - analysis
 ---
 
-# Analisis Gramatikal Lirik: "Do you think I have forgotten about you?"
-
 Struktur kalimat dalam lagu **"About You"** oleh The 1975 ini mengandung makna mendalam yang bisa dibedah melalui komponen linguistiknya.
 
 ---
