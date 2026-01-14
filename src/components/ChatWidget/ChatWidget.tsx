@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import styles from './ChatWidget.module.css';
 
 interface Message {
@@ -110,7 +111,13 @@ export default function ChatWidget() {
                                 key={index}
                                 className={`${styles.message} ${msg.role === 'user' ? styles.userMessage : styles.assistantMessage}`}
                             >
-                                {msg.content}
+                                {msg.role === 'assistant' ? (
+                                    <div className={styles.markdown}>
+                                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                                    </div>
+                                ) : (
+                                    msg.content
+                                )}
                             </div>
                         ))}
                         {isLoading && (
