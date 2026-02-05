@@ -33,9 +33,9 @@ function htmlToMarkdown(html: string): string {
     md = md.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (match, content) => {
         return content.replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n') + '\n';
     });
-    md = md.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (match, content) => {
+    md = md.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (match: string, content: string) => {
         let index = 0;
-        return content.replace(/<li[^>]*>(.*?)<\/li>/gi, (liMatch, item) => {
+        return content.replace(/<li[^>]*>(.*?)<\/li>/gi, (liMatch: string, item: string) => {
             index++;
             return `${index}. ${item}\n`;
         }) + '\n';
