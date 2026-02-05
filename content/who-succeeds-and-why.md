@@ -27,13 +27,13 @@ There is a saying that the hardest part of being a student is assessing yourself
 
 And as educators, what we can do is to develop strategies and a curriculum to help all students succeed. But it does not always work.
 
-Now we know the traits of successful people;
+Now we know the traits of successful people:
 
-1. undefined
-2. undefined
-3. undefined
+1. Self Control
+2. Resilience
+3. Self Assessment
 
-Now, the problem is Correlation ≠** **Causation. So, success isn't guaranteed by those traits. Rather than those traits, wealth and stability drive more.
+Now, the problem is Correlation ≠ Causation. So, success isn't guaranteed by those traits. Rather than those traits, wealth and stability drive more.
 
 Rich people are more likely to succeed than poor people. Even later on, the macroeconomics studies found out that school doesn't really matter.
 
