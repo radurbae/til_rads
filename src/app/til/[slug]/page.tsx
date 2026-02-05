@@ -45,6 +45,16 @@ function parseMarkdown(content: string): string {
         '<pre><code class="language-$1">$2</code></pre>'
     );
 
+    // Lists (unordered and ordered)
+    html = html.replace(/^\s*[-*+] (.+)$/gm, '<li data-list="ul">$1</li>');
+    html = html.replace(/^\s*\d+\. (.+)$/gm, '<li data-list="ol">$1</li>');
+    html = html.replace(/(<li data-list="ul">.*<\/li>\n?)+/g, (match) => {
+        return `<ul>${match.replace(/ data-list="ul"/g, "")}</ul>`;
+    });
+    html = html.replace(/(<li data-list="ol">.*<\/li>\n?)+/g, (match) => {
+        return `<ol>${match.replace(/ data-list="ol"/g, "")}</ol>`;
+    });
+
     // Inline code
     html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
 
@@ -60,10 +70,6 @@ function parseMarkdown(content: string): string {
         '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
     );
 
-    // Unordered lists
-    html = html.replace(/^- (.+)$/gm, "<li>$1</li>");
-    html = html.replace(/(<li>.*<\/li>\n?)+/g, "<ul>$&</ul>");
-
     // Blockquotes
     html = html.replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>");
 
@@ -77,6 +83,7 @@ function parseMarkdown(content: string): string {
             if (
                 block.startsWith("<h") ||
                 block.startsWith("<ul") ||
+                block.startsWith("<ol") ||
                 block.startsWith("<pre") ||
                 block.startsWith("<blockquote") ||
                 block.startsWith("<hr")
@@ -138,4 +145,3 @@ export default async function TilPage({
         </>
     );
 }
-
