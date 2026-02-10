@@ -7,6 +7,8 @@ import { parseMarkdown } from '@/lib/markdown';
 import { t, type Language } from '@/lib/i18n';
 import styles from './LocalizedArticle.module.css';
 
+const TRANSLATION_CACHE_VERSION = 'v2';
+
 interface LocalizedArticleProps {
     slug: string;
     title: string;
@@ -24,6 +26,11 @@ interface TranslationPayload {
     content: string;
 }
 
+interface LanguageDetectionResult {
+    language: Language;
+    confident: boolean;
+}
+
 function normalizeText(value: string): string {
     return value.replace(/\r\n/g, '\n').trim();
 }
@@ -37,7 +44,7 @@ function hashString(value: string): string {
     return `${hash}`;
 }
 
-function detectLanguage(value: string): Language {
+function detectLanguage(value: string): LanguageDetectionResult {
     const text = ` ${value.toLowerCase()} `;
 
     const idTokens = [' yang ', ' dan ', ' untuk ', ' dengan ', ' tidak ', ' adalah ', ' ini ', ' saya ', ' pada ', ' dari '];
@@ -45,8 +52,13 @@ function detectLanguage(value: string): Language {
 
     const idScore = idTokens.reduce((acc, token) => acc + text.split(token).length - 1, 0);
     const enScore = enTokens.reduce((acc, token) => acc + text.split(token).length - 1, 0);
+    const diff = Math.abs(idScore - enScore);
+    const totalHits = idScore + enScore;
 
-    return idScore >= enScore ? 'id' : 'en';
+    return {
+        language: idScore >= enScore ? 'id' : 'en',
+        confident: totalHits >= 3 && diff >= 2,
+    };
 }
 
 async function requestTranslation(
@@ -100,9 +112,9 @@ export default function LocalizedArticle({
     useEffect(() => {
         let isCancelled = false;
         const controller = new AbortController();
-        const cacheKey = `til:translation:v1:${slug}:${language}`;
+        const cacheKey = `til:translation:${TRANSLATION_CACHE_VERSION}:${slug}:${language}`;
 
-        if (language === sourceLanguage) {
+        if (sourceLanguage.confident && language === sourceLanguage.language) {
             setTranslated(null);
             setIsTranslating(false);
             return () => {

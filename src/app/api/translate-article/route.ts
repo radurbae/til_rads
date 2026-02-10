@@ -13,6 +13,8 @@ interface TranslateResult {
     content: string;
 }
 
+const TRANSLATION_CACHE_VERSION = 'v2';
+const TRANSLATION_MODEL = process.env.ARTICLE_TRANSLATION_MODEL || 'gpt-4.1-mini';
 const translationCache = new Map<string, TranslateResult>();
 
 function hashString(value: string): string {
@@ -36,7 +38,7 @@ function trimCache(maxItems: number) {
 
 function buildCacheKey(title: string, content: string, targetLanguage: Language): string {
     const fingerprint = hashString(`${title}\n${content}`);
-    return `${targetLanguage}:${fingerprint}`;
+    return `${TRANSLATION_CACHE_VERSION}:${targetLanguage}:${fingerprint}`;
 }
 
 function normalizeTitle(value: unknown, fallback: string): string {
@@ -49,6 +51,90 @@ function normalizeContent(value: unknown, fallback: string): string {
     if (typeof value !== 'string') return fallback;
     const normalized = value.trim();
     return normalized || fallback;
+}
+
+function countMatches(text: string, regex: RegExp): number {
+    const matches = text.match(regex);
+    return matches ? matches.length : 0;
+}
+
+function hasCriticalMarkdownDrift(source: string, translated: string): boolean {
+    const checks = [
+        /^#{1,3}\s/gm,
+        /^\s*[-*+]\s/gm,
+        /^\s*\d+\.\s/gm,
+        /^>\s/gm,
+        /```/g,
+        /\[[^\]]+\]\([^)]+\)/g,
+    ];
+
+    return checks.some((pattern) => {
+        const sourceCount = countMatches(source, pattern);
+        if (sourceCount === 0) {
+            return false;
+        }
+        const translatedCount = countMatches(translated, pattern);
+        const allowedDiff = Math.max(1, Math.floor(sourceCount * 0.25));
+        return Math.abs(sourceCount - translatedCount) > allowedDiff;
+    });
+}
+
+function buildUserPrompt(title: string, content: string, languageLabel: string, strictMode = false): string {
+    const strictSuffix = strictMode
+        ? 'You changed markdown structure in the previous output. Redo translation and keep markdown structure exactly intact.'
+        : '';
+
+    return (
+        `Translate the article title and markdown content into ${languageLabel}. ` +
+        'Keep the translation natural, idiomatic, and publication-ready. ' +
+        'Do not summarize or omit any part.\n\n' +
+        'Hard rules:\n' +
+        '- Preserve markdown structure and symbols.\n' +
+        '- Preserve headings, bullet lists, numbered lists, blockquotes, links, and horizontal rules.\n' +
+        '- Keep URLs unchanged.\n' +
+        '- Do not translate text inside inline code (`...`) and fenced code blocks (```...```).\n' +
+        '- Keep names and proper nouns unless there is a standard localized form.\n' +
+        '- Return strict JSON with exactly two keys: "title" and "content".\n\n' +
+        `${strictSuffix}\n\n` +
+        `Title:\n${title}\n\nContent:\n${content}`
+    );
+}
+
+async function performTranslation(
+    openai: OpenAI,
+    title: string,
+    content: string,
+    languageLabel: string,
+    strictMode = false
+): Promise<TranslateResult> {
+    const completion = await openai.chat.completions.create({
+        model: TRANSLATION_MODEL,
+        temperature: 0,
+        max_tokens: 8000,
+        response_format: { type: 'json_object' },
+        messages: [
+            {
+                role: 'system',
+                content:
+                    'You are an expert bilingual translator and editor. Return only valid JSON with keys "title" and "content".',
+            },
+            {
+                role: 'user',
+                content: buildUserPrompt(title, content, languageLabel, strictMode),
+            },
+        ],
+    });
+
+    const raw = completion.choices[0]?.message?.content;
+    if (!raw) {
+        throw new Error('Empty translation response');
+    }
+
+    const parsed = JSON.parse(raw) as Partial<TranslateResult>;
+    return {
+        title: normalizeTitle(parsed.title, title),
+        content: normalizeContent(parsed.content, content),
+    };
 }
 
 export async function POST(request: NextRequest) {
@@ -88,39 +174,18 @@ export async function POST(request: NextRequest) {
         const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
         const languageLabel = targetLanguage === 'id' ? 'Bahasa Indonesia' : 'English';
 
-        const completion = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
-            temperature: 0.1,
-            max_tokens: 6000,
-            response_format: { type: 'json_object' },
-            messages: [
-                {
-                    role: 'system',
-                    content:
-                        'You are a professional translator. Return only valid JSON with keys "title" and "content".',
-                },
-                {
-                    role: 'user',
-                    content:
-                        `Translate the article title and markdown content into ${languageLabel}. ` +
-                        'Preserve markdown syntax exactly: headings, lists, links, blockquotes, code blocks, inline code, emphasis, and horizontal rules. ' +
-                        `If the text is already mostly in ${languageLabel}, return it unchanged. ` +
-                        'Do not add explanations.\n\n' +
-                        `Title:\n${title}\n\nContent:\n${content}`,
-                },
-            ],
-        });
+        let result = await performTranslation(openai, title, content, languageLabel, false);
 
-        const raw = completion.choices[0]?.message?.content;
-        if (!raw) {
-            throw new Error('Empty translation response');
+        if (hasCriticalMarkdownDrift(content, result.content)) {
+            result = await performTranslation(openai, title, content, languageLabel, true);
         }
 
-        const parsed = JSON.parse(raw) as Partial<TranslateResult>;
-        const result: TranslateResult = {
-            title: normalizeTitle(parsed.title, title),
-            content: normalizeContent(parsed.content, content),
-        };
+        if (hasCriticalMarkdownDrift(content, result.content)) {
+            result = {
+                title: result.title,
+                content,
+            };
+        }
 
         translationCache.set(cacheKey, result);
         trimCache(200);
