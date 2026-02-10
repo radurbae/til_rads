@@ -1,0 +1,6 @@
+.translationStatus {
+    margin-top: 0.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
