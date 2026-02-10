@@ -1,5 +1,6 @@
 import Header from "@/components/Header/Header";
 import TilCard from "@/components/TilCard/TilCard";
+import Text from "@/components/I18n/Text";
 import { getAllTils } from "@/lib/til";
 import styles from "./page.module.css";
 
@@ -13,9 +14,11 @@ export default function Home() {
                 {/* Hero Section */}
                 <section className={styles.hero}>
                     <div className={`container ${styles.heroContent}`}>
-                        <h1 className={styles.heroTitle}>Today I Learned</h1>
+                        <h1 className={styles.heroTitle}>
+                            <Text id="home.title" />
+                        </h1>
                         <p className={styles.heroSubtitle}>
-                            Catatan pribadi dari hal-hal yang aku pelajari setiap hari.
+                            <Text id="home.subtitle" />
                         </p>
                     </div>
                 </section>
@@ -23,7 +26,9 @@ export default function Home() {
                 {/* TIL List */}
                 <section className={`container ${styles.section}`}>
                     <div className={styles.sectionHeader}>
-                        <h2 className={styles.sectionTitle}>Recent</h2>
+                        <h2 className={styles.sectionTitle}>
+                            <Text id="home.recent" />
+                        </h2>
                     </div>
                     <div className={styles.grid}>
                         {tils.map((til) => (
@@ -43,7 +48,7 @@ export default function Home() {
                 {/* Footer */}
                 <footer className={`container ${styles.footer}`}>
                     <p className={styles.footerText}>
-                        Made with ❤️ by Rads
+                        <Text id="home.footer" />
                     </p>
                 </footer>
             </main>

@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import styles from './ChatWidget.module.css';
+import { useAppSettings } from '@/components/AppSettings/AppSettingsProvider';
+import { t } from '@/lib/i18n';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -10,6 +12,7 @@ interface Message {
 }
 
 export default function ChatWidget() {
+    const { language } = useAppSettings();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
@@ -46,7 +49,7 @@ export default function ChatWidget() {
             if (data.error) {
                 setMessages(prev => [...prev, {
                     role: 'assistant',
-                    content: 'Maaf, terjadi kesalahan. Silakan coba lagi.'
+                    content: t(language, 'chat.errorGeneric')
                 }]);
             } else {
                 setMessages(prev => [...prev, {
@@ -57,7 +60,7 @@ export default function ChatWidget() {
         } catch {
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: 'Maaf, terjadi kesalahan koneksi. Silakan coba lagi.'
+                content: t(language, 'chat.errorConnection')
             }]);
         } finally {
             setIsLoading(false);
@@ -95,15 +98,15 @@ export default function ChatWidget() {
             {isOpen && (
                 <div className={styles.chatWindow}>
                     <div className={styles.chatHeader}>
-                        <span className={styles.headerTitle}>💬 Tanya Rads</span>
-                        <span className={styles.headerSubtitle}>Tanyakan apapun tentang tulisanku di sini</span>
+                        <span className={styles.headerTitle}>💬 {t(language, 'chat.headerTitle')}</span>
+                        <span className={styles.headerSubtitle}>{t(language, 'chat.headerSubtitle')}</span>
                     </div>
 
                     <div className={styles.messagesContainer}>
                         {messages.length === 0 && (
                             <div className={styles.welcomeMessage}>
-                                <p>Halo! 👋</p>
-                                <p>Saya Rads, sebuah AI yang memiliki pengetahuan dari tulisan-tulisan di website ini. Silakan tanya apa saja tentang tulisan-tulisan di website ini</p>
+                                <p>{t(language, 'chat.welcomeHello')} 👋</p>
+                                <p>{t(language, 'chat.welcomeBody')}</p>
                             </div>
                         )}
                         {messages.map((msg, index) => (
@@ -122,7 +125,7 @@ export default function ChatWidget() {
                         ))}
                         {isLoading && (
                             <div className={`${styles.message} ${styles.assistantMessage}`}>
-                                <span className={styles.typing}>Mengetik...</span>
+                                <span className={styles.typing}>{t(language, 'chat.typing')}</span>
                             </div>
                         )}
                         <div ref={messagesEndRef} />
@@ -134,7 +137,7 @@ export default function ChatWidget() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={handleKeyPress}
-                            placeholder="Ketik pertanyaan..."
+                            placeholder={t(language, 'chat.inputPlaceholder')}
                             className={styles.input}
                             disabled={isLoading}
                         />

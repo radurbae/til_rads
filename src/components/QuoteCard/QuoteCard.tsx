@@ -2,6 +2,8 @@
 
 import { useRef, useEffect, useState } from 'react';
 import styles from './QuoteCard.module.css';
+import { useAppSettings } from '@/components/AppSettings/AppSettingsProvider';
+import { t } from '@/lib/i18n';
 
 interface QuoteCardProps {
     quote: string;
@@ -35,6 +37,7 @@ function getRandomGradient() {
 }
 
 export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardProps) {
+    const { language } = useAppSettings();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [imageUrl, setImageUrl] = useState<string>('');
     const [currentGradient, setCurrentGradient] = useState(gradientPalettes[0]);
@@ -170,9 +173,9 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
             await navigator.clipboard.write([
                 new ClipboardItem({ 'image/png': blob })
             ]);
-            alert('Gambar berhasil disalin ke clipboard!');
+            alert(t(language, 'quote.copySuccess'));
         } catch {
-            alert('Gagal menyalin gambar. Coba download langsung.');
+            alert(t(language, 'quote.copyError'));
         }
     };
 
@@ -184,7 +187,7 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
                 <button className={styles.closeButton} onClick={onClose}>
                     ×
                 </button>
-                <h3 className={styles.title}>Preview Quote</h3>
+                <h3 className={styles.title}>{t(language, 'quote.previewTitle')}</h3>
 
                 <div className={styles.previewContainer}>
                     <canvas ref={canvasRef} className={styles.canvas} />
@@ -195,13 +198,13 @@ export default function QuoteCard({ quote, source, isOpen, onClose }: QuoteCardP
 
                 <div className={styles.actions}>
                     <button onClick={regenerateQuote} className={styles.shuffleButton}>
-                        🎨 Warna Lain
+                        🎨 {t(language, 'quote.shuffle')}
                     </button>
                     <button onClick={handleDownload} className={styles.downloadButton}>
-                        📥 Download
+                        📥 {t(language, 'quote.download')}
                     </button>
                     <button onClick={handleCopyToClipboard} className={styles.copyButton}>
-                        📋 Copy
+                        📋 {t(language, 'quote.copy')}
                     </button>
                 </div>
             </div>

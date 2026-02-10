@@ -1,4 +1,5 @@
 import Header from "@/components/Header/Header";
+import Text from "@/components/I18n/Text";
 import TilCard from "@/components/TilCard/TilCard";
 import { getAllTils } from "@/lib/til";
 import { notFound } from "next/navigation";
@@ -47,14 +48,16 @@ export default async function CategoryPage({
                     <div className={`container ${styles.heroContent}`}>
                         <h1 className={styles.heroTitle}>{categoryName}</h1>
                         <p className={styles.heroSubtitle}>
-                            {tils.length} catatan dalam kategori ini
+                            <Text id="category.count" values={{ count: tils.length }} />
                         </p>
                     </div>
                 </section>
 
                 <section className={`container ${styles.section}`}>
                     <div className={styles.sectionHeader}>
-                        <h2 className={styles.sectionTitle}>Posts</h2>
+                        <h2 className={styles.sectionTitle}>
+                            <Text id="category.posts" />
+                        </h2>
                     </div>
                     <div className={styles.grid}>
                         {tils.map((til) => (

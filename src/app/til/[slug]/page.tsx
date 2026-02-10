@@ -1,4 +1,5 @@
 import Header from "@/components/Header/Header";
+import Text from "@/components/I18n/Text";
 import { getTilBySlug, getAllSlugs } from "@/lib/til";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -118,7 +119,7 @@ export default async function TilPage({
                 <article className={`container ${styles.article}`}>
                     <header className={styles.articleHeader}>
                         <Link href="/" className={styles.backLink}>
-                            ← Back to all posts
+                            <Text id="til.backAllPosts" />
                         </Link>
                         <div className={styles.meta}>
                             <span className={styles.category}>{til.category}</span>

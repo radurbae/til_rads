@@ -3,12 +3,15 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import QuoteCard from '../QuoteCard/QuoteCard';
 import styles from '../QuoteCard/QuoteCard.module.css';
+import { useAppSettings } from '@/components/AppSettings/AppSettingsProvider';
+import { t } from '@/lib/i18n';
 
 interface TextSelectionHandlerProps {
     articleTitle: string;
 }
 
 export default function TextSelectionHandler({ articleTitle }: TextSelectionHandlerProps) {
+    const { language } = useAppSettings();
     const [selectedText, setSelectedText] = useState('');
     const [buttonPosition, setButtonPosition] = useState<{ x: number; y: number } | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +29,7 @@ export default function TextSelectionHandler({ articleTitle }: TextSelectionHand
                 setSelectedText(text);
 
                 // Calculate position - ensure it stays within viewport
-                const buttonWidth = 140;
+                const buttonWidth = 180;
                 const x = Math.max(
                     buttonWidth / 2 + 10,
                     Math.min(
@@ -136,7 +139,7 @@ export default function TextSelectionHandler({ articleTitle }: TextSelectionHand
                     onClick={handleCreateQuote}
                     onTouchEnd={handleCreateQuote}
                 >
-                    📷 Buat Quote
+                    📷 {t(language, 'quote.selectionButton')}
                 </button>
             )}
 

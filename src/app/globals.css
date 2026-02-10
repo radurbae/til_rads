@@ -36,6 +36,21 @@
     --transition-fast: 150ms ease;
 }
 
+[data-theme="dark"] {
+    --background: #0f1115;
+    --background-secondary: #151922;
+    --surface: #1b202b;
+    --surface-hover: #252c3a;
+    --border: #2b3242;
+    --border-hover: #3a455b;
+
+    --text-primary: #f3f5f8;
+    --text-secondary: #c6ccd8;
+    --text-muted: #8d97ab;
+
+    --accent: #f3f5f8;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -51,6 +66,7 @@ body {
     color: var(--text-primary);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 a {

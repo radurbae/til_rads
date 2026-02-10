@@ -1,4 +1,5 @@
 import Header from "@/components/Header/Header";
+import Text from "@/components/I18n/Text";
 import { getAllTils } from "@/lib/til";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -29,9 +30,11 @@ export default function CategoriesPage() {
                 <div className={`container ${styles.page}`}>
                     <div className={styles.header}>
                         <Link href="/" className={styles.backLink}>
-                            ← Back
+                            <Text id="categories.back" />
                         </Link>
-                        <h1 className={styles.title}>Categories</h1>
+                        <h1 className={styles.title}>
+                            <Text id="categories.title" />
+                        </h1>
                     </div>
                     <div className={styles.list}>
                         {categories.map(([name, count]) => (
