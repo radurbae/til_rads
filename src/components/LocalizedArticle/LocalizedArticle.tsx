@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAppSettings } from '@/components/AppSettings/AppSettingsProvider';
 import TextSelectionHandler from '@/components/TextSelectionHandler/TextSelectionHandler';
 import { parseMarkdown } from '@/lib/markdown';
-import { t, type Language } from '@/lib/i18n';
+import { t } from '@/lib/i18n';
 import styles from './LocalizedArticle.module.css';
 
 const TRANSLATION_CACHE_VERSION = 'v3';
@@ -26,11 +26,6 @@ interface TranslationPayload {
     content: string;
 }
 
-interface LanguageDetectionResult {
-    language: Language;
-    confident: boolean;
-}
-
 function normalizeText(value: string): string {
     return value.replace(/\r\n/g, '\n').trim();
 }
@@ -44,27 +39,10 @@ function hashString(value: string): string {
     return `${hash}`;
 }
 
-function detectLanguage(value: string): LanguageDetectionResult {
-    const text = ` ${value.toLowerCase()} `;
-
-    const idTokens = [' yang ', ' dan ', ' untuk ', ' dengan ', ' tidak ', ' adalah ', ' ini ', ' saya ', ' pada ', ' dari '];
-    const enTokens = [' the ', ' and ', ' for ', ' with ', ' not ', ' is ', ' this ', ' i ', ' in ', ' from '];
-
-    const idScore = idTokens.reduce((acc, token) => acc + text.split(token).length - 1, 0);
-    const enScore = enTokens.reduce((acc, token) => acc + text.split(token).length - 1, 0);
-    const diff = Math.abs(idScore - enScore);
-    const totalHits = idScore + enScore;
-
-    return {
-        language: idScore >= enScore ? 'id' : 'en',
-        confident: totalHits >= 3 && diff >= 2,
-    };
-}
-
 async function requestTranslation(
     title: string,
     content: string,
-    targetLanguage: Language,
+    targetLanguage: 'id' | 'en',
     signal: AbortSignal
 ): Promise<{ title: string; content: string }> {
     const response = await fetch('/api/translate-article', {
@@ -107,20 +85,11 @@ export default function LocalizedArticle({
 
     const sourceText = useMemo(() => `${title}\n${content}`, [title, content]);
     const sourceFingerprint = useMemo(() => hashString(normalizeText(sourceText)), [sourceText]);
-    const sourceLanguage = useMemo(() => detectLanguage(sourceText), [sourceText]);
 
     useEffect(() => {
         let isCancelled = false;
         const controller = new AbortController();
         const cacheKey = `til:translation:${TRANSLATION_CACHE_VERSION}:${slug}:${language}`;
-
-        if (sourceLanguage.confident && language === sourceLanguage.language) {
-            setTranslated(null);
-            setIsTranslating(false);
-            return () => {
-                controller.abort();
-            };
-        }
 
         const cached = window.localStorage.getItem(cacheKey);
         if (cached) {
@@ -141,6 +110,7 @@ export default function LocalizedArticle({
             }
         }
 
+        setTranslated(null);
         setIsTranslating(true);
 
         requestTranslation(title, content, language, controller.signal)
@@ -167,7 +137,7 @@ export default function LocalizedArticle({
             isCancelled = true;
             controller.abort();
         };
-    }, [content, language, slug, sourceFingerprint, sourceLanguage, title]);
+    }, [content, language, slug, sourceFingerprint, title]);
 
     const resolvedTitle = translated?.title ?? title;
     const resolvedContent = translated?.content ?? content;
