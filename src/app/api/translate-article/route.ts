@@ -13,8 +13,8 @@ interface TranslateResult {
     content: string;
 }
 
-const TRANSLATION_CACHE_VERSION = 'v2';
-const TRANSLATION_MODEL = process.env.ARTICLE_TRANSLATION_MODEL || 'gpt-4.1-mini';
+const TRANSLATION_CACHE_VERSION = 'v3';
+const DEFAULT_TRANSLATION_MODEL = 'gpt-4o-mini';
 const translationCache = new Map<string, TranslateResult>();
 
 function hashString(value: string): string {
@@ -102,13 +102,14 @@ function buildUserPrompt(title: string, content: string, languageLabel: string, 
 
 async function performTranslation(
     openai: OpenAI,
+    model: string,
     title: string,
     content: string,
     languageLabel: string,
     strictMode = false
 ): Promise<TranslateResult> {
     const completion = await openai.chat.completions.create({
-        model: TRANSLATION_MODEL,
+        model,
         temperature: 0,
         max_tokens: 8000,
         response_format: { type: 'json_object' },
@@ -135,6 +136,12 @@ async function performTranslation(
         title: normalizeTitle(parsed.title, title),
         content: normalizeContent(parsed.content, content),
     };
+}
+
+function getTranslationModels(): string[] {
+    const primary = process.env.ARTICLE_TRANSLATION_MODEL?.trim();
+    const candidates = [primary, DEFAULT_TRANSLATION_MODEL].filter(Boolean) as string[];
+    return [...new Set(candidates)];
 }
 
 export async function POST(request: NextRequest) {
@@ -173,18 +180,53 @@ export async function POST(request: NextRequest) {
 
         const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
         const languageLabel = targetLanguage === 'id' ? 'Bahasa Indonesia' : 'English';
+        const models = getTranslationModels();
 
-        let result = await performTranslation(openai, title, content, languageLabel, false);
+        let result: TranslateResult | null = null;
+        let lastError: unknown = null;
 
-        if (hasCriticalMarkdownDrift(content, result.content)) {
-            result = await performTranslation(openai, title, content, languageLabel, true);
+        for (const model of models) {
+            try {
+                let candidate = await performTranslation(
+                    openai,
+                    model,
+                    title,
+                    content,
+                    languageLabel,
+                    false
+                );
+
+                if (hasCriticalMarkdownDrift(content, candidate.content)) {
+                    try {
+                        candidate = await performTranslation(
+                            openai,
+                            model,
+                            title,
+                            content,
+                            languageLabel,
+                            true
+                        );
+                    } catch (strictError) {
+                        lastError = strictError;
+                    }
+                }
+
+                if (hasCriticalMarkdownDrift(content, candidate.content)) {
+                    candidate = {
+                        title: candidate.title,
+                        content,
+                    };
+                }
+
+                result = candidate;
+                break;
+            } catch (error) {
+                lastError = error;
+            }
         }
 
-        if (hasCriticalMarkdownDrift(content, result.content)) {
-            result = {
-                title: result.title,
-                content,
-            };
+        if (!result) {
+            throw lastError ?? new Error('All translation models failed');
         }
 
         translationCache.set(cacheKey, result);

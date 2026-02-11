@@ -7,7 +7,7 @@ import { parseMarkdown } from '@/lib/markdown';
 import { t, type Language } from '@/lib/i18n';
 import styles from './LocalizedArticle.module.css';
 
-const TRANSLATION_CACHE_VERSION = 'v2';
+const TRANSLATION_CACHE_VERSION = 'v3';
 
 interface LocalizedArticleProps {
     slug: string;
