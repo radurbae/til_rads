@@ -78,12 +78,8 @@
 
 .content p {
     margin-bottom: var(--space-md);
-    text-align: justify;
+    text-align: left;
 }
-
-/* ... existing code ... */
-
-
 
 .content a {
     color: var(--text-primary);
@@ -155,6 +151,25 @@
     color: var(--text-muted);
 }
 
+@media (max-width: 900px) {
+    .article {
+        padding: var(--space-xl) 0;
+    }
+
+    .articleHeader {
+        margin-bottom: var(--space-xl);
+    }
+
+    .title {
+        font-size: 1.35rem;
+    }
+
+    .content {
+        font-size: 0.9rem;
+        line-height: 1.75;
+    }
+}
+
 /* Mobile Responsive */
 @media (max-width: 640px) {
     .article {
@@ -163,7 +178,7 @@
 
     .articleHeader {
         margin-bottom: var(--space-lg);
-        padding: 0 1.5rem;
+        padding: 0 1rem;
     }
 
     .title {
@@ -172,7 +187,7 @@
 
     .content {
         font-size: 0.875rem;
-        padding: 0 1.5rem;
+        padding: 0 1rem;
     }
 
     .content h2 {
