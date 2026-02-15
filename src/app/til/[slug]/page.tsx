@@ -4,6 +4,8 @@ import { parseMarkdown } from "@/lib/markdown";
 import { getTilBySlug, getAllSlugs } from "@/lib/til";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import PostStats from "./PostStats";
+import CommentSection from "./CommentSection";
 import styles from "./page.module.css";
 
 export async function generateStaticParams() {
@@ -42,6 +44,8 @@ export default async function TilPage({
     }
 
     const htmlContent = parseMarkdown(til.content);
+    const wordCount = til.content.trim().split(/\s+/).filter(Boolean).length;
+    const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
 
     return (
         <>
@@ -57,6 +61,11 @@ export default async function TilPage({
                             <span className={styles.date}>{til.date}</span>
                         </div>
                         <h1 className={styles.title}>{til.title}</h1>
+                        <PostStats
+                            slug={til.slug}
+                            readTimeMinutes={readTimeMinutes}
+                            className={styles.postStats}
+                        />
                         {til.tags.length > 0 && (
                             <div className={styles.tags}>
                                 {til.tags.map((tag) => (
@@ -71,6 +80,7 @@ export default async function TilPage({
                         className={styles.content}
                         dangerouslySetInnerHTML={{ __html: htmlContent }}
                     />
+                    <CommentSection slug={til.slug} />
                 </article>
             </main>
             <TextSelectionHandler articleTitle={til.title} />

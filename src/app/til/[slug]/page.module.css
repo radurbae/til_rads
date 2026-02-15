@@ -8,6 +8,8 @@
 
 .articleHeader {
     margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border);
 }
 
 .backLink {
@@ -45,10 +47,20 @@
 }
 
 .title {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.2;
     letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.postStats {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--text-muted);
 }
 
 .tags {
@@ -136,6 +148,138 @@
     margin: var(--space-xl) 0;
 }
 
+.commentsSection {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border);
+}
+
+.commentsHeader {
+    margin-bottom: var(--space-lg);
+}
+
+.commentsTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.commentsSubtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.commentForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.commentLabel {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.commentInput,
+.commentTextarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+    color: var(--text-primary);
+    font: inherit;
+    padding: 0.75rem 0.875rem;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.commentInput:focus,
+.commentTextarea:focus {
+    outline: none;
+    border-color: var(--border-hover);
+    background: var(--background);
+}
+
+.commentTextarea {
+    resize: vertical;
+    min-height: 7rem;
+    line-height: 1.6;
+}
+
+.commentFormFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-top: var(--space-xs);
+}
+
+.commentHint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.commentButton {
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--text-primary);
+    color: var(--background);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.625rem 0.875rem;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.commentButton:hover {
+    opacity: 0.9;
+}
+
+.commentList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.commentCard {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+    padding: var(--space-md);
+}
+
+.commentCardHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.commentAuthor {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.commentDate {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.commentMessage {
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+
+.commentEmpty {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
 /* Not Found */
 .notFound {
     text-align: center;
@@ -158,15 +302,20 @@
 
     .articleHeader {
         margin-bottom: var(--space-xl);
+        padding-bottom: var(--space-md);
     }
 
     .title {
-        font-size: 1.35rem;
+        font-size: 2rem;
     }
 
     .content {
         font-size: 0.9rem;
         line-height: 1.75;
+    }
+
+    .commentsTitle {
+        font-size: 1.125rem;
     }
 }
 
@@ -178,11 +327,18 @@
 
     .articleHeader {
         margin-bottom: var(--space-lg);
-        padding: 0 1rem;
+        padding-bottom: var(--space-md);
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 
     .title {
-        font-size: 1.25rem;
+        font-size: 1.75rem;
+        line-height: 1.25;
+    }
+
+    .postStats {
+        font-size: 0.8125rem;
     }
 
     .content {
@@ -205,5 +361,21 @@
 
     .content pre code {
         font-size: 0.75rem;
+    }
+
+    .commentsSection {
+        margin-top: var(--space-xl);
+        padding-top: var(--space-lg);
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .commentFormFooter {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .commentButton {
+        width: 100%;
     }
 }
