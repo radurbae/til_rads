@@ -1,10 +1,19 @@
 import Header from "@/components/Header/Header";
-import TilCard from "@/components/TilCard/TilCard";
+import TilList, { TilListItem } from "@/components/TilList/TilList";
 import { getAllTils } from "@/lib/til";
 import styles from "./page.module.css";
 
 export default function Home() {
     const tils = getAllTils();
+    const tilItems: TilListItem[] = tils.map((til) => ({
+        slug: til.slug,
+        title: til.title,
+        excerpt: til.excerpt,
+        date: til.date,
+        language: til.language,
+        category: til.category,
+        tags: til.tags,
+    }));
 
     return (
         <>
@@ -23,24 +32,13 @@ export default function Home() {
                     <div className={styles.sectionHeader}>
                         <h2 className={styles.sectionTitle}>Recent</h2>
                     </div>
-                    <div className={styles.grid}>
-                        {tils.map((til) => (
-                            <TilCard
-                                key={til.slug}
-                                slug={til.slug}
-                                title={til.title}
-                                excerpt={til.excerpt}
-                                date={til.date}
-                                language={til.language}
-                                category={til.category}
-                                tags={til.tags}
-                            />
-                        ))}
-                    </div>
+                    <TilList items={tilItems} />
                 </section>
 
                 <footer className={`container ${styles.footer}`}>
-                    <p className={styles.footerText}>Made with care by Rads</p>
+                    <p className={styles.footerText}>
+                        Made with <span className={styles.heartIcon} aria-hidden="true">♥</span> by Rads
+                    </p>
                 </footer>
             </main>
         </>

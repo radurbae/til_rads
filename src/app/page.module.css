@@ -77,6 +77,13 @@
     color: var(--text-muted);
 }
 
+.heartIcon {
+    color: #ef4444;
+    display: inline-block;
+    line-height: 1;
+    transform: translateY(1px);
+}
+
 /* Mobile Responsive */
 @media (max-width: 640px) {
     .hero {
