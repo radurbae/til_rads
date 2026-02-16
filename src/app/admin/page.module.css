@@ -618,58 +618,110 @@
     }
 
     .dashboard {
-        padding: var(--space-lg) 1.5rem;
+        padding: var(--space-md);
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 
     .dashboardHeader {
-        padding: 0;
+        margin-bottom: var(--space-lg);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
     }
 
     .dashboardTitle {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
 
     .tabsContainer {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        padding-bottom: 2px; /* Prevent scrollbar cutting off border */
+        margin-right: calc(var(--space-md) * -1); /* Allow scrolling to edge */
+        padding-right: var(--space-md);
+        mask-image: linear-gradient(to right, black 90%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
     }
 
     .tab {
         white-space: nowrap;
-        padding: var(--space-sm) var(--space-sm);
-        font-size: 0.875rem;
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9375rem; /* Keep readable size */
     }
 
-    .subTabsContainer {
-        flex-wrap: wrap;
+    /* Transform Table to Cards on Mobile */
+    .table, .table thead, .table tbody, .table th, .table td, .table tr {
+        display: block;
     }
 
-    .table {
-        font-size: 0.75rem;
+    .table thead {
+        display: none; /* Hide standard headers */
     }
 
-    .table th,
+    .table tr {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--space-md);
+        padding: var(--space-md);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
     .table td {
-        padding: var(--space-xs) var(--space-sm);
+        border-bottom: none;
+        padding: var(--space-xs) 0;
+        text-align: left;
     }
 
     .titleCell {
-        max-width: 150px;
+        font-weight: 600;
+        font-size: 1.125rem;
+        max-width: none;
+        white-space: normal;
+        margin-bottom: var(--space-xs);
+        color: var(--text-primary);
     }
 
-    .cardGrid {
-        grid-template-columns: repeat(2, 1fr);
+    /* Repurpose other cells as metadata rows */
+    .table td:nth-of-type(2), /* Category */
+    .table td:nth-of-type(3) { /* Date */
+        display: inline-block;
+        margin-right: var(--space-md);
+        font-size: 0.875rem;
+        color: var(--text-muted);
     }
 
+    .actionsCell {
+        margin-top: var(--space-md);
+        padding-top: var(--space-md) !important;
+        border-top: 1px solid var(--border) !important;
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--space-sm);
+    }
+
+    .editButton, .deleteButton {
+        padding: var(--space-sm) var(--space-md); /* Larger touch targets */
+        font-size: 0.875rem;
+    }
+
+    /* Login Mobile */
     .loginContainer {
-        padding: var(--space-lg) 1.5rem;
+        padding: var(--space-lg) var(--space-md);
     }
 
-    .loginTitle {
-        font-size: 1.5rem;
+    .loginBox {
+        width: 100%;
     }
 
     .field textarea {
-        min-height: 300px;
+        min-height: 250px;
+    }
+
+    /* Adjust inputs for touch */
+    .field input, .field select, .field textarea {
+        font-size: 16px; /* Prevent iOS zoom */
+        padding: var(--space-md);
     }
 }

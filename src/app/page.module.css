@@ -91,7 +91,7 @@
     }
 
     .heroContent {
-        padding: 0 1.5rem;
+        padding: 0;
     }
 
     .heroTitle {
@@ -105,6 +105,6 @@
     .sectionHeader,
     .grid,
     .footer {
-        padding: 0 1.5rem;
+        padding: 0;
     }
 }

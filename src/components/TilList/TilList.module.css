@@ -113,6 +113,12 @@
 }
 
 @media (max-width: 640px) {
+    .filters {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
     .resultText {
         font-size: 0.7rem;
     }
